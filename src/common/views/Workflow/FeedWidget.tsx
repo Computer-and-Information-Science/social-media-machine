@@ -5,10 +5,11 @@ import Feed from '../Feed/Feed';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { useRef, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useTranslation } from 'react-i18next';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import UserDialog from '../UserListing/UserDialog';
 import { useSetRecoilState } from 'recoil';
 import { menuSelectedUser } from '@genaism/apps/Dashboard/state/menuState';
+import i18n from '@genaism/i18n';
 
 interface Props {
     id: UserNodeId;
@@ -31,7 +32,7 @@ export default function FeedWidget({ id, onProfile, onRecommend, onLog, hideMenu
         <Widget
             title={name}
             dataWidget="feed"
-            style={{ width: '400px', maxWidth: '80%' }}
+            style={{ width: '400px' }}
             contentStyle={{ height: '600px' }}
             noPadding
             menu={
@@ -61,11 +62,16 @@ export default function FeedWidget({ id, onProfile, onRecommend, onLog, hideMenu
                 )
             }
         >
-            <UserDialog
-                open={openUserList}
-                onClose={() => setOpenUserList(false)}
-                onSelect={(u) => setSelected(u[0])}
-            />
+            <I18nextProvider
+                i18n={i18n}
+                defaultNS={'dashboard'}
+            >
+                <UserDialog
+                    open={openUserList}
+                    onClose={() => setOpenUserList(false)}
+                    onSelect={(u) => setSelected(u[0])}
+                />
+            </I18nextProvider>
             <Feed
                 id={id}
                 noHeader
@@ -73,6 +79,7 @@ export default function FeedWidget({ id, onProfile, onRecommend, onLog, hideMenu
                 onProfile={onProfile}
                 onRecommend={onRecommend}
                 onLog={onLog}
+                noPadding
             />
         </Widget>
     );
